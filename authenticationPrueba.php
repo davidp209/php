@@ -1,10 +1,5 @@
 <?php
 session_start();
-echo "_POST";
-print_r($_POST);//esto es para saber que datos nos da el usuario y con esto saber utilizarlo 
-echo "<br>SESSION";
-
-print_r($_POST);
 
 $usuario = $_SESSION['usuarios'] ?? array();
 
@@ -12,50 +7,47 @@ $mensaje = array(
     'contraseñasNoCoinciden' => 'Las dos contraseñas no coinciden',
     'registerSuccessfull' => 'Registro realizado correctamente',
     'loginSuccessfull' => 'Sesión iniciada correctamente',
-    'usuarioAutenticado' => 'Autenticado',
-    'loginError' => 'Las credenciales no coinciden con las de ningún usuarios'
+    'loginError' => 'Las credenciales no coinciden con las de ningún usuarios',
+    'usuarioAutenticado' => 'Autenticado'
 );
 
-
-if(!empty($_POST['loginButton'])){
-    $email =$_POST['loginEmail'];
-    $password = $_POST['loginPassword'];
-    if(array_key_exists($email,$usuario) && $usuario[$email] == $password){
-        $_SESSION['autenticado'] = true;
-        $indiceMensaje = 'loginSuccessfull';
-        //echo "sesion iniciada";exit();
-    }else{
-        $indiceMensaje = 'loginError';
-    }
-}elseif(!empty($_POST['logaout'])){
-    $_SESSION['autenticado'] = false;
-}elseif(!empty($_POST['registerButton'])){
-    if(!empty($_POST['registerEmail']) &&
-        !empty($_POST['registerPassword']) &&
-        $_POST['registerPassword'] == $_POST['registerRepeatPassword']){ 
-    $usuario[$_POST['registerEmail']] = $_POST['registerPassword'];
-    $indiceMensaje ='registerSuccessfull';
+if(!empty($_POST['loginButton'])) {
+  $email = $_POST['loginEmail'];
+  $password = $_POST['loginPassword'];
+  if(array_key_exists($email, $usuario) && $usuario[$email] == $password) {
     $_SESSION['autenticado'] = true;
-
-
-}else{
+    $indiceMensaje = 'loginSuccessfull';
+  } else {
+    $indiceMensaje = 'loginError';
+  }
+} elseif(!empty($_POST['logoutButton'])) {
+    $_SESSION['autenticado'] = false;
+} elseif(!empty($_POST['registerButton'])) {
+  if(!empty($_POST['registerEmail']) &&
+    !empty(($_POST['registerPassword'])) &&
+    $_POST['registerPassword'] == $_POST['registerRepeatPassword']
+  ) {
+    $usuario[$_POST['registerEmail']] = $_POST['registerPassword'];
+    $indiceMensaje = 'registerSuccessfull';
+    $_SESSION['autenticado'] = true;
+  } else {
     $indiceMensaje = 'contraseñasNoCoinciden';
+  }
 }
 
-
-if(!isset($indiceMensaje) && array_key_exists('autenticado', $_SESSION) && $_SESSION['autenticado']){
-    $indiceMensaje = 'usuarioAutenticado';
+if(!isset($indiceMensaje) && array_key_exists('autenticado', $_SESSION) && $_SESSION['autenticado']) {
+  $indiceMensaje = 'usuarioAutenticado';
 }
 
-$mensajeSalida = isset($indiceMensaje) ? $mensaje[$indiceMensaje] : ' ';
-$_SESSION['usuarios']= $usuario ;
+$mensajeSalida = isset($indiceMensaje) ? $mensaje[$indiceMensaje] : '';
 
+$_SESSION['usuarios'] = $usuario;
 ?>
 <!DOCTYPE HTML>
 <!--
-	Identity by HTML5 UP
-	html5up.net | @ajlkn
-	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+  Identity by HTML5 UP
+  html5up.net | @ajlkn
+  Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
 -->
 <html>
 <head>
@@ -86,7 +78,7 @@ $_SESSION['usuarios']= $usuario ;
     <section id="main">
         <header>
             <span class="avatar"><img src=" data:image/png;base64,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" alt="" /></span>
-            <div class="alert alert-info"><?php echo $mensajeSalida ?> </div>  <!-- Con una funcion seria asi -->
+            <div class="alert alert-info"><?php echo $mensajeSalida ?></div>
             <!-- Tab links -->
             <div class="tab">
                 <button class="tablinks" onclick="openTab('Register')">Register</button>
@@ -125,17 +117,14 @@ $_SESSION['usuarios']= $usuario ;
                         <input type="password" name="loginPassword" class="form-control" placeholder="******" aria-describedby="sizing-addon1">
                     </div>
                     <br>
-                    <?php //este if primerp comprueba que haya una session que se llame autenticado y luego la otra parte 
-                    //
-                        if(array_key_exists('autenticado', $_SESSION) && $_SESSION['autenticado']) : ?>
-                    <button class="btn btn-lg btn-primary btn-block btn-signin" id="IngresoLog" type="submit" name="logaout" value="1">LogOut</button>
-                    <?php else : ?>
+<?php
+  if(array_key_exists('autenticado', $_SESSION) && $_SESSION['autenticado']) : ?>
+                    <button class="btn btn-lg btn-primary btn-block btn-signin" id="IngresoLog" type="submit" name="logoutButton" value="1">Logout</button>
+<?php else : ?>
                     <button class="btn btn-lg btn-primary btn-block btn-signin" id="IngresoLog" type="submit" name="loginButton" value="1">Login</button>
-                    <?php endif; ?>
+<?php endif; ?>
+                </div>
 
-                
-                </div> 
- 
             </form>
 
         </header>
