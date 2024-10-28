@@ -6,7 +6,11 @@ class ClaseExtendida extends ClaseSencilla{
         echo "Clase Extendida\n";
         parent::mostrarVar();//esto es porque estoy llamando a una funcion que tiene el hijo
     }
+public static function unMetodoEstatico(){
 
+    echo"Metodo estatico <br \>";
+
+}
 
 
 }
